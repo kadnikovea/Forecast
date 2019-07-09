@@ -41,10 +41,6 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                        view.setDataToAdapter(it) }
                    .subscribe()
 
-                println("XXXXXXXXX changes came ")
-
-
-
             }
 
         })

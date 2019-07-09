@@ -2,8 +2,6 @@ package com.k4dnikov.forecast.data.repository
 
 import com.k4dnikov.forecast.Forecast
 import com.k4dnikov.forecast.data.api.model.WheatherData
-import com.k4dnikov.forecast.data.api.model.WheatherEntity
-import com.k4dnikov.forecast.data.api.model.X
 import com.k4dnikov.forecast.data.api.model.XEntity
 import com.k4dnikov.forecast.data.api.service.WheathermapApi
 import com.k4dnikov.forecast.data.realm.RealmDb
@@ -27,6 +25,7 @@ class ForecastRepositoryImpl(private val wheathermapApi: WheathermapApi,
         wheathermapApi.getWeatherForecast(Forecast.zip)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .map { it-> it.list }
             .subscribe({
                 realmDb.save(it)
 

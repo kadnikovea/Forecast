@@ -13,7 +13,6 @@ import com.k4dnikov.forecast.presentation.base.BaseActivity
 import com.k4dnikov.forecast.presentation.presenter.ForecastPresenter
 import com.k4dnikov.forecast.presentation.ui.adapter.ForecastRecyclerAdapter
 import com.k4dnikov.forecast.presentation.ui.view.MainActivityView
-import io.realm.RealmList
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -24,8 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : BaseActivity(), MainActivityView {
-
-
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -41,7 +38,7 @@ class MainActivity : BaseActivity(), MainActivityView {
         linearLayoutManager = LinearLayoutManager(this)
         recyclerViewForecast.layoutManager = linearLayoutManager
 
-        forecastAdapter = ForecastRecyclerAdapter()
+        forecastAdapter = ForecastRecyclerAdapter(this@MainActivity)
         recyclerViewForecast.adapter = forecastAdapter
 
 
@@ -51,31 +48,7 @@ class MainActivity : BaseActivity(), MainActivityView {
 
         presenter.getForecast()
 
-//        progress_bar.visibility = View.VISIBLE
-
-//        forecastRepository.getForecastRemote()
-//            .doOnNext {
-//                println("XXXXXXXXX " + it.toString())
-//            }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe()
-//
-//
-//        Realm.getDefaultInstance().addChangeListener(object : RealmChangeListener<Realm> {
-//            override fun onChange(t: Realm?) {
-//                val db = RealmDb()
-//
-//                println("XXXXXXXXX changes came")
-//
-//                db.getAll()
-//            }
-//
-//        })
-
     }
-
-
 
     override fun setDataToAdapter(it: XEntity?) {
 
