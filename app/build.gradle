@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'realm-android'
+
+
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+    defaultConfig {
+        applicationId "com.k4dnikov.forecast"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    rx2AdapterRetrofit = "2.0.2"
+    rx2AndroidVersion = "2.1.1"
+    rx2JavaVersion = "2.2.6"
+    codeinGeneric = "6.3.2"
+    constraint = "1.1.3"
+    androidX = "1.0.2"
+    retrofit = "2.1.0"
+    okHttp = "3.0.0"
+    glide = "4.4.0"
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:$androidX"
+    implementation "androidx.core:core-ktx:$androidX"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint"
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'androidx.test:runner:1.2.0'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+//  RxJava
+    implementation "io.reactivex.rxjava2:rxandroid:$rx2AndroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rx2JavaVersion"
+//    implementation "com.squareup.retrofit2:adapter-rxjava2:$rx2AdapterRetrofit"
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+//    Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation("com.squareup.okhttp3:okhttp:$okHttp")
+
+//    Glide
+    implementation "com.github.bumptech.glide:glide:$glide"
+    kapt "com.github.bumptech.glide:compiler:$glide"
+
+//    Codein
+    implementation "org.kodein.di:kodein-di-generic-jvm:$codeinGeneric"
+    implementation "org.kodein.di:kodein-di-framework-android-x:$codeinGeneric"
+}
+
