@@ -1,6 +1,7 @@
 package com.k4dnikov.forecast.presentation.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
 import com.k4dnikov.forecast.Forecast
@@ -14,6 +15,7 @@ import com.k4dnikov.forecast.presentation.presenter.ForecastPresenter
 import com.k4dnikov.forecast.presentation.ui.adapter.ForecastRecyclerAdapter
 import com.k4dnikov.forecast.presentation.ui.view.MainActivityView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.loader_layout.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -30,6 +32,15 @@ class MainActivity : BaseActivity(), MainActivityView {
 
     private lateinit var presenter: ForecastPresenter
 
+
+    override fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        progressBar.visibility = View.GONE
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -40,7 +51,6 @@ class MainActivity : BaseActivity(), MainActivityView {
 
         forecastAdapter = ForecastRecyclerAdapter(this@MainActivity)
         recyclerViewForecast.adapter = forecastAdapter
-
 
         val forecastRepository = ForecastRepositoryImpl(createApi(), RealmDb())
 

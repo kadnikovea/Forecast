@@ -28,7 +28,6 @@ class ForecastRepositoryImpl(private val wheathermapApi: WheathermapApi,
             .map { it-> it.list }
             .subscribe({
                 realmDb.save(it)
-
             })
 
         return wheathermapApi.getWeatherForecast(Forecast.zip)

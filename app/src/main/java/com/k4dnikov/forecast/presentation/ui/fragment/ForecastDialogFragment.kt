@@ -26,12 +26,14 @@ class ForecastDialogFragment : DialogFragment() {
         fun newInstance(header: String,
                        description: String,
                        iconPath: String): ForecastDialogFragment {
+
             val bundle = Bundle()
             bundle.putString(BUNDLE_HEADER, header)
             bundle.putString(BUNDLE_DESCRIPTION, description)
             bundle.putString(BUNDLE_ICON_PATH, iconPath)
             val forecastDialogFragment = ForecastDialogFragment()
             forecastDialogFragment.arguments = bundle
+
             return forecastDialogFragment
         }
     }
@@ -46,8 +48,10 @@ class ForecastDialogFragment : DialogFragment() {
 
         if(header != null)
             view.header.text = header
+
         if(description != null)
             view.description.text = description
+
         if(iconPath != null)
             GlideApp.with(this)
                 .load(iconPath)
@@ -56,7 +60,7 @@ class ForecastDialogFragment : DialogFragment() {
         return AlertDialog.Builder(context!!)
             .setView(view)
             .create()
-        
+
     }
 
 }

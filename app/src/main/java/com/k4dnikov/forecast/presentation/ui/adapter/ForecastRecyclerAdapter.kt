@@ -62,11 +62,6 @@ class ForecastRecyclerAdapter(val activity: Activity) : RecyclerView.Adapter<For
                 .load(pathToicon)
                 .into(view.itemImage)
 
-
-//            Glide.with(activity)
-//                .load(pathToicon)
-//                .into(view.itemImage)
-
             view.setOnClickListener{
 
                 val dialog = ForecastDialogFragment.newInstance(xEntity.weatherEntity?.get(0)?.main!!,

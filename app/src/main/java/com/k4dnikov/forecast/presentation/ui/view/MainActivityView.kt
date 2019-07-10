@@ -7,5 +7,8 @@ interface MainActivityView : BaseView {
 
     fun setDataToAdapter(it: XEntity?)
 
+    fun showLoading()
+
+    fun hideLoading()
 
 }

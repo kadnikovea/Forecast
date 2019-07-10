@@ -18,6 +18,8 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
 
     fun getForecast() {
 
+        view.showLoading()
+
         forecastRepository.getForecastRemote()
             .doOnNext {
                 println("XXXXXXXXX presenter " + it.toString())
@@ -40,6 +42,9 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                        println("XXXXXXXXX changes came " + it.toString())
                        view.setDataToAdapter(it) }
                    .subscribe()
+
+                view.hideLoading()
+
 
             }
 
