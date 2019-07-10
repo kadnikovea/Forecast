@@ -52,14 +52,10 @@ dependencies {
     implementation "androidx.core:core-ktx:$androidX"
     implementation "androidx.constraintlayout:constraintlayout:$constraint"
     implementation "androidx.recyclerview:recyclerview:$recycler"
-//    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'androidx.test:runner:1.2.0'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
 //  RxJava
     implementation "io.reactivex.rxjava2:rxandroid:$rx2AndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rx2JavaVersion"
-//    implementation "com.squareup.retrofit2:adapter-rxjava2:$rx2AdapterRetrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rx2Adapter"
 //    Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
@@ -69,8 +65,6 @@ dependencies {
 //    Glide
     implementation "com.github.bumptech.glide:glide:$glide"
     kapt "com.github.bumptech.glide:compiler:$glide"
-
-
 
 //    Codein
     implementation "org.kodein.di:kodein-di-generic-jvm:$codeinGeneric"

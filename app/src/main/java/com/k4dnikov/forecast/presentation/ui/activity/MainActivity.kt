@@ -32,7 +32,6 @@ class MainActivity : BaseActivity(), MainActivityView {
 
     private lateinit var presenter: ForecastPresenter
 
-
     override fun showLoading() {
         progressBar.visibility = View.VISIBLE
     }

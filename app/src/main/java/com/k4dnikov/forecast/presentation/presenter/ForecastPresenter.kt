@@ -20,6 +20,17 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
 
         view.showLoading()
 
+        forecastRepository.getForecastCache()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                println("XXXXXXXXX changes came " + it.toString())
+                view.setDataToAdapter(it)
+                view.hideLoading()
+
+            }
+            .subscribe()
+
         forecastRepository.getForecastRemote()
             .doOnNext {
                 println("XXXXXXXXX presenter " + it.toString())
