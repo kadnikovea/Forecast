@@ -52,7 +52,7 @@ class ForecastRecyclerAdapter(val activity: Activity) : RecyclerView.Adapter<For
 
         fun bind(xEntity: XEntity?) {
 
-            view.itemDate.text = activity.recyclerDateFormat(xEntity?.dt!!)
+            view.itemDate.text = recyclerDateFormat(xEntity?.dt!!)
 
             view.itemTemperature.text = xEntity?.mainEntity?.temp.toString() + "К"
             val icon = xEntity.weatherEntity?.get(0)?.icon

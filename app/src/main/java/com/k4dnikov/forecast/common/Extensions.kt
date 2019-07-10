@@ -1,6 +1,5 @@
 package com.k4dnikov.forecast.common
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +12,11 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
-fun Context.recyclerDateFormat(timestamp: Long): String{
-    val timestamp = Timestamp(timestamp)
+fun recyclerDateFormat(timestamp: Long): String{
+    val timestamp = Timestamp(timestamp*1000)
     val date = Date(timestamp.time)
-    val timePattern = "dd.MMMM.yyyyг HH:mm"
+    val timePattern = "dd MMMM yyyyг HH:mm"
     var format = SimpleDateFormat(timePattern)
     return format.format(date)
+
 }
