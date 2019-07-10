@@ -56,7 +56,6 @@ class MainActivity : BaseActivity(), MainActivityView {
             println("XXXXXXXXX setDataToAdapter not NULL")
             forecastAdapter.addData(it)
             forecastAdapter.notifyDataSetChanged()
-
         }
 
     }
@@ -68,6 +67,7 @@ class MainActivity : BaseActivity(), MainActivityView {
         val apiKeyInterceptor = object : Interceptor {
 
             override fun intercept(chain: Interceptor.Chain?): Response {
+
                 val originalRequest = chain!!.request()
                 val originalUrl = originalRequest!!.url()
 
@@ -81,14 +81,12 @@ class MainActivity : BaseActivity(), MainActivityView {
                 val newRequest = requestBuilder!!.build()
 
                 return chain.proceed(newRequest)
-
             }
         }
 
         val client =  OkHttpClient.Builder()
             .addInterceptor(apiKeyInterceptor)
             .build()
-
 
         return Retrofit.Builder()
             .client(client)
@@ -97,8 +95,6 @@ class MainActivity : BaseActivity(), MainActivityView {
             .baseUrl(Forecast.BASE_URL)
             .build()
             .create(WheathermapApi::class.java)
-
-
 
     }
 }

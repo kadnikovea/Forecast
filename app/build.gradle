@@ -13,6 +13,8 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
+
+
     defaultConfig {
         applicationId "com.k4dnikov.forecast"
         minSdkVersion 21
@@ -40,7 +42,7 @@ ext {
     androidX = "1.0.2"
     retrofit = "2.1.0"
     okHttp = "3.0.0"
-    glide = "4.4.0"
+    glide = "4.8.0"
 }
 
 dependencies {
@@ -67,6 +69,8 @@ dependencies {
 //    Glide
     implementation "com.github.bumptech.glide:glide:$glide"
     kapt "com.github.bumptech.glide:compiler:$glide"
+
+
 
 //    Codein
     implementation "org.kodein.di:kodein-di-generic-jvm:$codeinGeneric"
