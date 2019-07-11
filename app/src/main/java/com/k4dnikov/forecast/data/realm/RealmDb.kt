@@ -74,6 +74,10 @@ class RealmDb {
 
     }
 
+    fun close(){
+        realm.close()
+    }
+
 }
 
 

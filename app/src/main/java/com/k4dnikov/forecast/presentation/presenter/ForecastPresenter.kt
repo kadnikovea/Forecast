@@ -4,6 +4,7 @@ import com.k4dnikov.forecast.data.repository.ForecastRepository
 import com.k4dnikov.forecast.presentation.base.BasePresenter
 import com.k4dnikov.forecast.presentation.ui.view.MainActivityView
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmChangeListener
@@ -15,11 +16,13 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
         registerDbChangeListener()
     }
 
+    val compositeDisposable = CompositeDisposable()
+
     fun getForecast() {
 
         view.showLoading()
 
-        forecastRepository.getForecastCache()
+        val disposableCache = forecastRepository.getForecastCache()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
@@ -32,7 +35,7 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
             }
             .subscribe()
 
-        forecastRepository.getForecastRemote()
+        val disposableRemote = forecastRepository.getForecastRemote()
             .doOnNext {
             }
             .doOnError {
@@ -41,6 +44,8 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
+
+        compositeDisposable.addAll(disposableCache, disposableRemote)
 
     }
 
@@ -61,11 +66,15 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
 
                 view.hideLoading()
 
-
             }
 
         })
     }
 
+    fun dispose(){
+
+        compositeDisposable.dispose()
+
+    }
 
 }

@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.k4dnikov.forecast.R
-import com.k4dnikov.forecast.data.api.model.HourForecast
 import com.k4dnikov.forecast.data.api.model.HourForecastEntity
-import com.k4dnikov.forecast.data.api.service.WheathermapApi
+import com.k4dnikov.forecast.data.api.service.WeatherMapApi
 import com.k4dnikov.forecast.data.realm.RealmDb
 import com.k4dnikov.forecast.data.repository.ForecastRepositoryImpl
 import com.k4dnikov.forecast.presentation.base.BaseActivity
@@ -24,7 +23,9 @@ class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
 
     override val kodein by closestKodein()
 
-    private val whatherApi: WheathermapApi by instance()
+    private val whatherApi: WeatherMapApi by instance()
+
+    private val realmDb: RealmDb by instance()
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -44,7 +45,7 @@ class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
         forecastAdapter = ForecastRecyclerAdapter(this@MainActivity)
         recyclerViewForecast.adapter = forecastAdapter
 
-        val forecastRepository = ForecastRepositoryImpl(whatherApi, RealmDb())
+        val forecastRepository = ForecastRepositoryImpl(whatherApi, realmDb)
 
         presenter = ForecastPresenter(forecastRepository, this)
 
@@ -69,5 +70,10 @@ class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
         progressBar.visibility = View.GONE
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.dispose()
+        realmDb.close()
 
+    }
 }

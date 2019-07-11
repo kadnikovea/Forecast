@@ -3,7 +3,7 @@ package com.k4dnikov.forecast
 import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.k4dnikov.forecast.data.api.service.WheathermapApi
+import com.k4dnikov.forecast.data.api.service.WeatherMapApi
 import com.k4dnikov.forecast.data.realm.RealmDb
 import io.realm.Realm
 import okhttp3.Interceptor
@@ -11,11 +11,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.androidXModule
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
-import org.kodein.di.generic.with
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,6 +35,8 @@ class Forecast : Application(), KodeinAware {
 
 
     override val kodein by Kodein.lazy{
+
+        bind<RealmDb>() with singleton { RealmDb() }
 
         bind<Gson>() with singleton { GsonBuilder()
             .create()}
@@ -75,7 +75,7 @@ class Forecast : Application(), KodeinAware {
             .baseUrl(BASE_URL)
             .build() }
 
-        bind<WheathermapApi>() with singleton { instance<Retrofit>().create(WheathermapApi::class.java) }
+        bind<WeatherMapApi>() with singleton { instance<Retrofit>().create(WeatherMapApi::class.java) }
 
     }
 

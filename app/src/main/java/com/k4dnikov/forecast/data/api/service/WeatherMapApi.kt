@@ -5,7 +5,7 @@ import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WheathermapApi {
+interface WeatherMapApi {
     @GET("forecast/hourly")
     fun getWeatherForecast(@Query("zip") zip:String) : Observable<WheatherData>
 
