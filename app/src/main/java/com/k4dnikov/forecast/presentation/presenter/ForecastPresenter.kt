@@ -24,7 +24,6 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                println("XXXXXXXXX changes came " + it.toString())
                 view.setDataToAdapter(it)
                 view.hideLoading()
 
@@ -33,7 +32,6 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
 
         forecastRepository.getForecastRemote()
             .doOnNext {
-                println("XXXXXXXXX presenter " + it.toString())
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -50,7 +48,6 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                    .subscribeOn(Schedulers.io())
                    .observeOn(AndroidSchedulers.mainThread())
                    .doOnNext {
-                       println("XXXXXXXXX changes came " + it.toString())
                        view.setDataToAdapter(it) }
                    .subscribe()
 

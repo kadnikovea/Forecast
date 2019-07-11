@@ -19,12 +19,20 @@ import kotlinx.android.synthetic.main.loader_layout.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class MainActivity : BaseActivity(), MainActivityView {
+class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
+
+    override val kodein by closestKodein()
+
+    private val whatherApi: WheathermapApi by instance()
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -32,13 +40,6 @@ class MainActivity : BaseActivity(), MainActivityView {
 
     private lateinit var presenter: ForecastPresenter
 
-    override fun showLoading() {
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun hideLoading() {
-        progressBar.visibility = View.GONE
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -51,7 +52,7 @@ class MainActivity : BaseActivity(), MainActivityView {
         forecastAdapter = ForecastRecyclerAdapter(this@MainActivity)
         recyclerViewForecast.adapter = forecastAdapter
 
-        val forecastRepository = ForecastRepositoryImpl(createApi(), RealmDb())
+        val forecastRepository = ForecastRepositoryImpl(whatherApi, RealmDb())
 
         presenter = ForecastPresenter(forecastRepository, this)
 
@@ -62,48 +63,19 @@ class MainActivity : BaseActivity(), MainActivityView {
     override fun setDataToAdapter(it: XEntity?) {
 
         if (it != null) {
-            println("XXXXXXXXX setDataToAdapter not NULL")
             forecastAdapter.addData(it)
             forecastAdapter.notifyDataSetChanged()
         }
 
     }
 
-    fun createApi(): WheathermapApi {
-
-        val gson = GsonBuilder().create()
-
-        val apiKeyInterceptor = object : Interceptor {
-
-            override fun intercept(chain: Interceptor.Chain?): Response {
-
-                val originalRequest = chain!!.request()
-                val originalUrl = originalRequest!!.url()
-
-                val newUrl = originalUrl!!.newBuilder()!!
-                    .addQueryParameter(Forecast.APPID_QUERY_NAME, Forecast.APPID)!!
-                    .build()
-
-                val requestBuilder = originalRequest.newBuilder()!!
-                    .url(newUrl)
-
-                val newRequest = requestBuilder!!.build()
-
-                return chain.proceed(newRequest)
-            }
-        }
-
-        val client =  OkHttpClient.Builder()
-            .addInterceptor(apiKeyInterceptor)
-            .build()
-
-        return Retrofit.Builder()
-            .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(Forecast.BASE_URL)
-            .build()
-            .create(WheathermapApi::class.java)
-
+    override fun showLoading() {
+        progressBar.visibility = View.VISIBLE
     }
+
+    override fun hideLoading() {
+        progressBar.visibility = View.GONE
+    }
+
+
 }
