@@ -15,7 +15,6 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
         registerDbChangeListener()
     }
 
-
     fun getForecast() {
 
         view.showLoading()
@@ -28,10 +27,16 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                 view.hideLoading()
 
             }
+            .doOnError {
+                view.showError(it.localizedMessage)
+            }
             .subscribe()
 
         forecastRepository.getForecastRemote()
             .doOnNext {
+            }
+            .doOnError {
+                view.showError(it.localizedMessage)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -49,6 +54,9 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                    .observeOn(AndroidSchedulers.mainThread())
                    .doOnNext {
                        view.setDataToAdapter(it) }
+                   .doOnError {
+                       view.showError(it.localizedMessage)
+                   }
                    .subscribe()
 
                 view.hideLoading()
