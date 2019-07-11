@@ -3,10 +3,9 @@ package com.k4dnikov.forecast.presentation.ui.activity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.GsonBuilder
-import com.k4dnikov.forecast.Forecast
 import com.k4dnikov.forecast.R
-import com.k4dnikov.forecast.data.api.model.XEntity
+import com.k4dnikov.forecast.data.api.model.HourForecast
+import com.k4dnikov.forecast.data.api.model.HourForecastEntity
 import com.k4dnikov.forecast.data.api.service.WheathermapApi
 import com.k4dnikov.forecast.data.realm.RealmDb
 import com.k4dnikov.forecast.data.repository.ForecastRepositoryImpl
@@ -16,16 +15,9 @@ import com.k4dnikov.forecast.presentation.ui.adapter.ForecastRecyclerAdapter
 import com.k4dnikov.forecast.presentation.ui.view.MainActivityView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.loader_layout.*
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
-import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
@@ -60,7 +52,7 @@ class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
 
     }
 
-    override fun setDataToAdapter(it: XEntity?) {
+    override fun setDataToAdapter(it: HourForecastEntity?) {
 
         if (it != null) {
             forecastAdapter.addData(it)
