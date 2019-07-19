@@ -6,8 +6,6 @@ import com.k4dnikov.forecast.data.api.model.XEntity
 import com.k4dnikov.forecast.data.api.service.WheathermapApi
 import com.k4dnikov.forecast.data.realm.RealmDb
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 
 class ForecastRepositoryImpl(private val wheathermapApi: WheathermapApi,
@@ -16,19 +14,11 @@ class ForecastRepositoryImpl(private val wheathermapApi: WheathermapApi,
 
     override fun getForecastCache(): Observable<XEntity> {
 
-        return realmDb.getAll();
+        return realmDb.getAll()
 
     }
 
     override fun getForecastRemote(): Observable<WheatherData> {
-
-        wheathermapApi.getWeatherForecast(Forecast.zip)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { it-> it.list }
-            .subscribe({
-                realmDb.save(it)
-            })
 
         return wheathermapApi.getWeatherForecast(Forecast.zip)
 
