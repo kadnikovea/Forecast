@@ -4,6 +4,6 @@ data class WheatherData(
     val city: City?,
     val cnt: Int?,
     val cod: String?,
-    val list: List<X>?,
+    val list: List<HourForecast>?,
     val message: Double?
 )

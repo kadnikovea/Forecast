@@ -1,6 +1,6 @@
 package com.k4dnikov.forecast.data.api.model
 
-data class X(
+data class HourForecast(
     val clouds: Clouds?,
     val dt: Long?,
     val dt_txt: String?,

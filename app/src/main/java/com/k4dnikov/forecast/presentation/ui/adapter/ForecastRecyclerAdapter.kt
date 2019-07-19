@@ -1,30 +1,25 @@
 package com.k4dnikov.forecast.presentation.ui.adapter
 
 import android.app.Activity
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.k4dnikov.forecast.R
-import com.k4dnikov.forecast.common.GlideApp
 import com.k4dnikov.forecast.common.inflate
 import com.k4dnikov.forecast.common.recyclerDateFormat
-import com.k4dnikov.forecast.data.api.model.XEntity
+import com.k4dnikov.forecast.data.api.model.HourForecast
+import com.k4dnikov.forecast.data.api.model.HourForecastEntity
 import com.k4dnikov.forecast.presentation.ui.activity.MainActivity
 import com.k4dnikov.forecast.presentation.ui.fragment.ForecastDialogFragment
-import kotlinx.android.synthetic.main.forecast_fragment.view.*
 import kotlinx.android.synthetic.main.forecast_item.view.*
 
 
 class ForecastRecyclerAdapter(val activity: Activity) : RecyclerView.Adapter<ForecastRecyclerAdapter.ForecastHolder>() {
 
-    var hoursForecast: MutableList<XEntity>? = ArrayList<XEntity>()
+    var hoursForecast: MutableList<HourForecastEntity>? = ArrayList<HourForecastEntity>()
 
 
-    fun addData(newData: XEntity){
+    fun addData(newData: HourForecastEntity){
         hoursForecast?.add(newData)
         notifyItemInserted(hoursForecast!!.size)
     }
@@ -47,25 +42,25 @@ class ForecastRecyclerAdapter(val activity: Activity) : RecyclerView.Adapter<For
     class ForecastHolder(v: View, val activity: Activity) : RecyclerView.ViewHolder(v){
 
         private var view = v
-        private var forecast: XEntity? = null
+        private var forecast: HourForecast? = null
 
 
-        fun bind(xEntity: XEntity?) {
+        fun bind(hourEntity: HourForecastEntity?) {
 
-            view.itemDate.text = recyclerDateFormat(xEntity?.dt!!)
-            view.itemTemperature.text = xEntity?.mainEntity?.temp.toString() + "К"
-            val icon = xEntity.weatherEntity?.get(0)?.icon
+            view.itemDate.text = recyclerDateFormat(hourEntity?.dt!!)
+            view.itemTemperature.text = hourEntity?.mainEntity?.temp.toString() + "К"
+            val icon = hourEntity.weatherEntity?.get(0)?.icon
 
             val pathToicon = "http://openweathermap.org/img/wn/$icon@2x.png"
 
-            GlideApp.with(activity)
+            Glide.with(activity)
                 .load(pathToicon)
                 .into(view.itemImage)
 
             view.setOnClickListener{
 
-                val dialog = ForecastDialogFragment.newInstance(xEntity.weatherEntity?.get(0)?.main!!,
-                    xEntity.weatherEntity?.get(0)?.description!!,
+                val dialog = ForecastDialogFragment.newInstance(hourEntity.weatherEntity?.get(0)?.main!!,
+                    hourEntity.weatherEntity?.get(0)?.description!!,
                     pathToicon)
 
                 dialog.show((activity as MainActivity).supportFragmentManager, ForecastDialogFragment::class.java.simpleName)

@@ -3,11 +3,9 @@ package com.k4dnikov.forecast.presentation.ui.activity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.GsonBuilder
-import com.k4dnikov.forecast.Forecast
 import com.k4dnikov.forecast.R
-import com.k4dnikov.forecast.data.api.model.XEntity
-import com.k4dnikov.forecast.data.api.service.WheathermapApi
+import com.k4dnikov.forecast.data.api.model.HourForecastEntity
+import com.k4dnikov.forecast.data.api.service.WeatherMapApi
 import com.k4dnikov.forecast.data.realm.RealmDb
 import com.k4dnikov.forecast.data.repository.ForecastRepositoryImpl
 import com.k4dnikov.forecast.presentation.base.BaseActivity
@@ -16,15 +14,18 @@ import com.k4dnikov.forecast.presentation.ui.adapter.ForecastRecyclerAdapter
 import com.k4dnikov.forecast.presentation.ui.view.MainActivityView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.loader_layout.*
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
 
 
-class MainActivity : BaseActivity(), MainActivityView {
+class MainActivity : BaseActivity(), MainActivityView, KodeinAware {
+
+    override val kodein by closestKodein()
+
+    private val whatherApi: WeatherMapApi by instance()
+
+    private val realmDb: RealmDb by instance()
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -32,13 +33,6 @@ class MainActivity : BaseActivity(), MainActivityView {
 
     private lateinit var presenter: ForecastPresenter
 
-    override fun showLoading() {
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun hideLoading() {
-        progressBar.visibility = View.GONE
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -51,7 +45,7 @@ class MainActivity : BaseActivity(), MainActivityView {
         forecastAdapter = ForecastRecyclerAdapter(this@MainActivity)
         recyclerViewForecast.adapter = forecastAdapter
 
-        val forecastRepository = ForecastRepositoryImpl(createApi(), RealmDb())
+        val forecastRepository = ForecastRepositoryImpl(whatherApi, realmDb)
 
         presenter = ForecastPresenter(forecastRepository, this)
 
@@ -59,51 +53,27 @@ class MainActivity : BaseActivity(), MainActivityView {
 
     }
 
-    override fun setDataToAdapter(it: XEntity?) {
+    override fun setDataToAdapter(it: HourForecastEntity?) {
 
         if (it != null) {
-            println("XXXXXXXXX setDataToAdapter not NULL")
             forecastAdapter.addData(it)
             forecastAdapter.notifyDataSetChanged()
         }
 
     }
 
-    fun createApi(): WheathermapApi {
+    override fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+    }
 
-        val gson = GsonBuilder().create()
+    override fun hideLoading() {
+        progressBar.visibility = View.GONE
+    }
 
-        val apiKeyInterceptor = object : Interceptor {
-
-            override fun intercept(chain: Interceptor.Chain?): Response {
-
-                val originalRequest = chain!!.request()
-                val originalUrl = originalRequest!!.url()
-
-                val newUrl = originalUrl!!.newBuilder()!!
-                    .addQueryParameter(Forecast.APPID_QUERY_NAME, Forecast.APPID)!!
-                    .build()
-
-                val requestBuilder = originalRequest.newBuilder()!!
-                    .url(newUrl)
-
-                val newRequest = requestBuilder!!.build()
-
-                return chain.proceed(newRequest)
-            }
-        }
-
-        val client =  OkHttpClient.Builder()
-            .addInterceptor(apiKeyInterceptor)
-            .build()
-
-        return Retrofit.Builder()
-            .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(Forecast.BASE_URL)
-            .build()
-            .create(WheathermapApi::class.java)
+    override fun onStop() {
+        super.onStop()
+        presenter.dispose()
+        realmDb.close()
 
     }
 }

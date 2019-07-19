@@ -19,23 +19,29 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
         registerDbChangeListener()
     }
 
-
     fun getForecast() {
 
         view.showLoading()
 
-        val forecastCache = forecastRepository.getForecastCache()
+        val disposableCache = forecastRepository.getForecastCache()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                println("XXXXXXXXX changes came " + it.toString())
                 view.setDataToAdapter(it)
                 view.hideLoading()
 
             }
+            .doOnError {
+                view.showError(it.localizedMessage)
+            }
             .subscribe()
 
-        val forecastRemote = forecastRepository.getForecastRemote()
+        val disposableRemote = forecastRepository.getForecastRemote()
+            .doOnNext {
+            }
+            .doOnError {
+                view.showError(it.localizedMessage)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { it-> it.list }
@@ -43,8 +49,8 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                 RealmDb().save(it)
             })
 
-        compositeDisposable.addAll(forecastCache, forecastRemote)
 
+        compositeDisposable.addAll(disposableCache, disposableRemote)
 
     }
 
@@ -57,12 +63,13 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
                    .subscribeOn(Schedulers.io())
                    .observeOn(AndroidSchedulers.mainThread())
                    .doOnNext {
-                       println("XXXXXXXXX changes came " + it.toString())
                        view.setDataToAdapter(it) }
+                   .doOnError {
+                       view.showError(it.localizedMessage)
+                   }
                    .subscribe()
 
                 view.hideLoading()
-
 
             }
 
@@ -71,9 +78,8 @@ class ForecastPresenter(private val forecastRepository: ForecastRepository,
 
     fun dispose(){
 
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
 
     }
-
 
 }
